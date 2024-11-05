@@ -12,8 +12,6 @@ export class AVPlayerClass{
   static isPlay: boolean = false
   // 5. 播放模式
   static playMode:'auto'|'repeat'|'random'  = 'auto'
-
-
   // 播放列表
   static playList: SongType[] = []
   // 播放索引
@@ -45,6 +43,8 @@ export class AVPlayerClass{
     AVPlayerClass.player.on('endOfStream',()=>{
       if (AVPlayerClass.playMode === 'repeat'){
         AVPlayerClass.player.reset()
+        setTimeout(() => {
+        }, 200);
         AVPlayerClass.player.url = AVPlayerClass.playList[AVPlayerClass.playIndex].url
       }
     })
@@ -71,11 +71,26 @@ export class AVPlayerClass{
       // 设置播放源
       // 状态机进入限制状态
       AVPlayerClass.player.reset()
+      setTimeout(() => {
+      }, 200);
       AVPlayerClass.player.url = song.url
     }
     AVPlayerClass.isPlay = true
     AVPlayerClass.updateState()
 
+    AppStorage.setOrCreate('canShow',true )
+
+
+  }
+  static changeMusic(song:SongType){
+    const index = AVPlayerClass.playList.findIndex(item=>item.id === song.id)
+    if (index >=0 && index<AVPlayerClass.playList.length){
+      AVPlayerClass.playIndex = index
+      AVPlayerClass.player.reset()
+      setTimeout(() => {
+      }, 200);
+      AVPlayerClass.player.url = AVPlayerClass.playList[AVPlayerClass.playIndex].url
+    }
   }
   static  nextPlay(){
     if(AVPlayerClass.playIndex < AVPlayerClass.playList.length - 1){
@@ -117,7 +132,24 @@ export class AVPlayerClass{
         name:AVPlayerClass.playList[AVPlayerClass.playIndex].name,
         author:AVPlayerClass.playList[AVPlayerClass.playIndex].author,
       }
-    }
-    )
+    })
+
+    emitter.emit({
+      eventId:1
+    },{
+      data:{
+        duration :AVPlayerClass.duration,
+        time :AVPlayerClass.time,
+        isPlay :AVPlayerClass.isPlay,
+        playMode :AVPlayerClass.playMode,
+        playList:AVPlayerClass.playList,
+        playIndex:AVPlayerClass.playIndex,
+        img:AVPlayerClass.playList[AVPlayerClass.playIndex].img,
+        name:AVPlayerClass.playList[AVPlayerClass.playIndex].name,
+        author:AVPlayerClass.playList[AVPlayerClass.playIndex].author,
+      }
+    })
+
+
   }
 }

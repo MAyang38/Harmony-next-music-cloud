@@ -1,14 +1,19 @@
 import { songs } from '../constant/music'
 import { AVPlayerClass } from '../utils/AVPlayerClass'
 import { emitter } from '@kit.BasicServicesKit'
-import { PlayState } from '../model/music'
+import { PlayState, SongType } from '../model/music'
 import { media } from '@kit.MediaKit'
+import { MusicListCom } from '../components/MusicListCom'
 
 @Entry
 @Component
 struct Play {
+  // scroller: Scroller | undefined
 
   @State playState:PlayState = {} as PlayState
+  // @State showPlaylist: boolean = false  // 控制底部弹窗的显示状态
+  @StorageLink('isShow') isShow: boolean = false;
+
   aboutToAppear(): void {
     this.playState.isPlay = false
     emitter.on({
@@ -19,6 +24,10 @@ struct Play {
       // data.data
     })
   }
+  togglePlaylist(): void {
+    this.isShow = !this.isShow
+  }
+
   number2time(number:number){
     // '00:00'
     const second = Math.floor(number/1000)
@@ -175,11 +184,11 @@ struct Play {
         // 切换
         Row() {
           Image($r('app.media.ic_auto'))
-            .fillColor(Color.White)
+            // .fillColor(Color.White)
             .width(30)
 
           Image($r("app.media.ic_prev"))
-            .fillColor(Color.White)
+            // .fillColor(Color.White)
             .width(30)
             .onClick(
               ()=>{
@@ -202,7 +211,7 @@ struct Play {
             })
           // 下一首
           Image($r('app.media.ic_next'))
-            .fillColor(Color.White)
+            // .fillColor(Color.White)
             .width(30)
             .onClick(()=>{
               AVPlayerClass.nextPlay()
@@ -211,6 +220,7 @@ struct Play {
           Image($r('app.media.ic_song_list'))
             .fillColor(Color.White)
             .width(30)
+            .onClick(()=>this.togglePlaylist())
         }
         .width('100%')
         .padding({
@@ -219,6 +229,72 @@ struct Play {
         .justifyContent(FlexAlign.SpaceAround)
       }
       .width('100%')
+
+
+      if (this.isShow) {
+
+        MusicListCom()
+        // Stack({ alignContent: Alignment.Bottom }) {
+        //   Scroll() {
+        //     Text("111")
+        //   }
+        // }
+
+        // Stack() {
+        //   // 背景遮罩
+        //   Column() {
+        //       // 点击遮罩关闭播放列表
+        //   }
+        //   .opacity(0.5)
+        //   .height('100%')
+        //   .width('100%')
+        //
+        //   // 歌曲列表容器
+        //   Column() {
+        //     // 歌曲列表标题
+        //     Row() {
+        //       Text("当前播放列表("+AVPlayerClass.playList.length+")")
+        //         .fontSize(20)
+        //         .fontWeight(FontWeight.Bold)
+        //       // 可选：关闭按钮
+        //       Image($r("app.media.ic_close"))
+        //         .fillColor(Color.Black)
+        //         .width(24)
+        //         .onClick(() => this.togglePlaylist())  // 关闭播放列表
+        //     }
+        //     .width('100%')
+        //     .justifyContent(FlexAlign.SpaceBetween)
+        //
+        //
+        //     // 歌曲列表
+        //     Column({ space: 8 }) {
+        //       ForEach(AVPlayerClass.playList,(song:SongType) => {
+        //         Row() {
+        //           Text(song.name)
+        //             .fontSize(16)
+        //             .fontWeight(FontWeight.Bold)
+        //           Text(song.author)
+        //             .fontSize(14)
+        //             .fontColor('#888')
+        //         }
+        //         .onClick(() => {
+        //           // 处理选择歌曲的逻辑（如播放选中的歌曲）
+        //           console.log('选中的歌曲:', song)
+        //           // 更新 playState 并播放选中的歌曲
+        //           AVPlayerClass.changeMusic(song)
+        //           this.showPlaylist = false  // 选择歌曲后关闭播放列表
+        //         })
+        //       })
+        //     }
+        //   }
+        //   .backgroundColor('#fff')
+        //   .padding(16)
+        //   .borderRadius(16)
+        // }
+        // .height('50%')
+        // .backgroundColor('#000')
+        // .zIndex(9999)
+      }
     }
     .width('100%')
     .height('100%')
@@ -226,5 +302,7 @@ struct Play {
     .backgroundImageSize(ImageSize.Cover)
     .backgroundBlurStyle(BlurStyle.BACKGROUND_ULTRA_THICK)
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+
+
   }
 }

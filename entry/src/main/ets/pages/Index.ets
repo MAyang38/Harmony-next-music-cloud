@@ -2,10 +2,14 @@ import { songs } from '../constant/music'
 import router from '@ohos.router'
 import { SongType } from '../model/music'
 import { AVPlayerClass } from '../utils/AVPlayerClass'
+import { Player } from '../components/Player'
 
 @Entry
 @Component
 struct Index {
+  // @State canShow:boolean = AVPlayerClass.isPlay
+  @StorageLink('canShow') canShow: boolean = false;
+
   build() {
     Column() {
       Row() {
@@ -73,10 +77,17 @@ struct Index {
         })
       }
       .layoutWeight(1)
+
+      if(this.canShow) {
+        Player()
+      }
     }
     .width('100%')
     .height('100%')
     .backgroundColor('#111113')
     .expandSafeArea([SafeAreaType.SYSTEM],[SafeAreaEdge.TOP,SafeAreaEdge.BOTTOM])
+
+
+
   }
 }
