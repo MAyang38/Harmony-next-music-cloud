@@ -22,7 +22,7 @@ export class AVPlayerClass{
 
   static async init(){
     AVPlayerClass.player = await media.createAVPlayer()
-
+    AVPlayerClass.playMode = 'repeat'
     AVPlayerClass.player.on('stateChange',(state)=>{
       switch (state){
         case 'initialized':
@@ -41,6 +41,12 @@ export class AVPlayerClass{
       console.log(JSON.stringify(time))
       AVPlayerClass.time = time
       AVPlayerClass.updateState()
+    })
+    AVPlayerClass.player.on('endOfStream',()=>{
+      if (AVPlayerClass.playMode === 'repeat'){
+        AVPlayerClass.player.reset()
+        AVPlayerClass.player.url = AVPlayerClass.playList[AVPlayerClass.playIndex].url
+      }
     })
 
   }

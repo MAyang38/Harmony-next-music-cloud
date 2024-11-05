@@ -2,6 +2,7 @@ import { songs } from '../constant/music'
 import { AVPlayerClass } from '../utils/AVPlayerClass'
 import { emitter } from '@kit.BasicServicesKit'
 import { PlayState } from '../model/music'
+import { media } from '@kit.MediaKit'
 
 @Entry
 @Component
@@ -23,7 +24,7 @@ struct Play {
     const second = Math.floor(number/1000)
     if(second >=60){
       const m = Math.floor(second/60)
-      return `${m.toString().padStart(2,'0')}:${second%60}`
+      return `${m.toString().padStart(2,'0')}:${(second%60).toString().padStart(2,'0')}`
     }else{
       return `00:${second.toString().padStart(2,'0')}`
     }
@@ -156,6 +157,9 @@ struct Play {
             min: 0,
             max: this.playState.duration
           })
+            .onChange((value)=>{
+              AVPlayerClass.player.seek(value,media.SeekMode.SEEK_PREV_SYNC)
+            })
             .layoutWeight(1)
             .blockColor(Color.White)
             .selectedColor(Color.White)
