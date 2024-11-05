@@ -48,7 +48,7 @@ export class AVPlayerClass{
   static async singlePlay(song:SongType){
 
 
-    const index = AVPlayerClass.playList.findIndex(item=>{item.id === song.id})
+    const index = AVPlayerClass.playList.findIndex(item=>item.id === song.id)
     if(index >=0){
       if(AVPlayerClass.player.url === song.url){
           // 继续播放
@@ -61,7 +61,7 @@ export class AVPlayerClass{
       AVPlayerClass.playList.unshift(song)
       AVPlayerClass.playIndex = 0
       AVPlayerClass.time = 0
-      // AVPlayerClass.duration =
+      AVPlayerClass.duration = 0
       // 设置播放源
       // 状态机进入限制状态
       AVPlayerClass.player.reset()
