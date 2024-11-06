@@ -7,7 +7,7 @@ import { MusicListCom } from '../components/MusicListCom'
 
 @Entry
 @Component
-struct Play {
+export struct Play {
   // scroller: Scroller | undefined
 
   @State playState:PlayState = {} as PlayState

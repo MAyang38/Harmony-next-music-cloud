@@ -1,6 +1,7 @@
 import media from "@ohos.multimedia.media";
 import { SongType } from "../model/music";
 import { emitter } from "@kit.BasicServicesKit";
+import { Notice } from "../components/Notice";
 
 export class AVPlayerClass{
   static player:media.AVPlayer  = {} as media.AVPlayer
@@ -81,7 +82,10 @@ export class AVPlayerClass{
     AppStorage.setOrCreate('canShow',true )
 
 
+    Notice.publishBasicText()
+
   }
+
   static changeMusic(song:SongType){
     const index = AVPlayerClass.playList.findIndex(item=>item.id === song.id)
     if (index >=0 && index<AVPlayerClass.playList.length){

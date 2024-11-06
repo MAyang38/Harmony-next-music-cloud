@@ -1,15 +1,26 @@
-
-import { HomeTabsComp } from './Tabs/HomeTabsComp'
-import { MyTabsComp } from './Tabs/MyTabsComp'
-
+import { themeManager } from '../manager';
+import { GuardTabsComp } from './Tabs/GuardTabsComp';
+import { HomeTabsComp } from './Tabs/HomeTabsComp';
+import { MyTabsComp } from './Tabs/MyTabsComp';
 
 @Entry
 @Component
 struct Index {
-
   // @Provide 装饰器和 @Consume装饰器：与后代组件双向同步
   @Provide currentIndex: number = 0
+  @Provide isPageShow: boolean = false
   @StorageLink('bottomHeight') bottomHeight: number = 0
+
+  onPageShow() {
+    themeManager.enableFullScreen()
+    // 保存页面显示与隐藏状态
+    this.isPageShow = true
+  }
+
+  onPageHide() {
+    themeManager.disableFullScreen()
+    this.isPageShow = false
+  }
 
   @Builder
   TabBuilder(title: string, targetIndex: number, selectedImg: Resource, normalImg: Resource) {
@@ -31,7 +42,6 @@ struct Index {
     })
   }
 
-
   build() {
     Tabs({ index: this.currentIndex, barPosition: BarPosition.End }) {
       TabContent() {
@@ -40,24 +50,20 @@ struct Index {
       }
       .tabBar(this.TabBuilder('首页', 0, $r('app.media.ic_tab_shouye_filled'), $r('app.media.ic_tab_shouye')))
 
-      //
-      // TabContent() {
-      //   // 守护中心
-      //   // GuardTabsComp()
-      // }
-      // .tabBar(this.TabBuilder('守护中心', 1, $r('app.media.ic_tab_shzx_filled'), $r('app.media.ic_tab_shzx')))
+      TabContent() {
+        // 守护中心
+        GuardTabsComp()
+      }
+      .tabBar(this.TabBuilder('守护中心', 1, $r('app.media.ic_tab_shzx_filled'), $r('app.media.ic_tab_shzx')))
 
       TabContent() {
         // 我的
         MyTabsComp()
       }
-      .tabBar(this.TabBuilder('我的', 1, $r('app.media.ic_tab_wode_filled'), $r('app.media.ic_tab_wode')))
+      .tabBar(this.TabBuilder('我的', 2, $r('app.media.ic_tab_wode_filled'), $r('app.media.ic_tab_wode')))
     }
     .barMode(BarMode.Fixed) // 默认值 Fixed
     .scrollable(false) // 限制滑动
     .padding({ bottom: this.bottomHeight })
   }
-
-
-
 }

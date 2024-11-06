@@ -42,6 +42,14 @@
     {
       "name": "music_list_background",
       "value": "#FFF6F2F2"
+    },
+    {
+      "name": "brand",
+      "value": "#0A59F7"
+    },
+    {
+      "name": "font",
+      "value": "#0C273D"
     }
   ]
 }
